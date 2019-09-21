@@ -17,7 +17,7 @@ Slides are available [here](https://github.com/daattali/shiny-workshop-odsc2019/
 That's all you need to do! Don't worry about looking at any of the material, we'll cover it all in the workshop. All you need to do is steps 1-2-3. 
 
 
-#### Alternate setup instructions: Option 2
+### Alternate setup instructions: Option 2
 
 I highly recommend following the steps above for setup. The only caveat with the previous steps is that they assume that you'll have an internet connection available during the workshop. If you think you may not have internet during the workshop, then you can follow these steps for setup instead:
 
