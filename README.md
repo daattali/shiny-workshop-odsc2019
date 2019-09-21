@@ -20,7 +20,11 @@ That's all you need to do! Don't worry about looking at any of the material, we'
 
 The above steps assume that you'll have an internet connection during the workshop. Just in case you won't have internet, I suggest also doing the following 3 steps, to also have a copy of the material on your computer.
 
-**Optional Step 1:** Install the following R packages: `shiny`, `ggplot2`, `dplyr`, `DT`, `colourpicker`, `readr`. You can use this command in R to install all these packages at once: `install.packages(c("shiny", "ggplot2", "dplyr", "DT", "colourpicker", "readr"))` 
+**Optional Step 1:** Install the following R packages: `shiny`, `ggplot2`, `dplyr`, `DT`, `colourpicker`, `readr`. You can use this command in R to install all these packages at once:
+
+
+    install.packages(c("shiny", "ggplot2", "dplyr", "DT", "colourpicker", "readr")) 
+
 
 **Optional Step 2:** Go to https://github.com/daattali/shiny-workshop-odsc2019
 
