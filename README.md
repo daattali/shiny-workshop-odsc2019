@@ -4,7 +4,7 @@ In this workshop, we'll be using [data](https://www.kaggle.com/schmadam97/nba-re
 
 Slides are available [here](https://github.com/daattali/shiny-workshop-odsc2019/raw/master/Shiny%20Workshop%20-%20ODSC%202019.pdf)
 
-### Before we begin
+### Before we begin: Option 1
 
 **Step 1:** Go to https://rstudio.cloud and sign up
 
@@ -14,4 +14,15 @@ Slides are available [here](https://github.com/daattali/shiny-workshop-odsc2019/
 
 ![step 3](https://i.imgur.com/nU5bbFL.png)
 
-That's all you need to do! Don't worry about looking at any of the material, we'll cover it all in the workshop. All you need to do is steps 1-2-3.
+That's all you need to do! Don't worry about looking at any of the material, we'll cover it all in the workshop. All you need to do is steps 1-2-3. 
+
+
+#### Alternate setup instructions: Option 2
+
+I highly recommend following the steps above for setup. The only caveat with the previous steps is that they assume that you'll have an internet connection available during the workshop. If you think you may not have internet during the workshop, then you can follow these steps for setup instead:
+
+**Step 1:** Install the following R packages: `shiny`, `ggplot2`, `dplyr`, `DT`, `colourpicker`, `readr`. You can use this command in R to install all these packages at once: `install.packages(c("shiny", "ggplot2", "dplyr", "DT", "colourpicker", "readr"))` 
+
+**Step 2:** Go to https://github.com/daattali/shiny-workshop-odsc2019
+
+**Step 3:** Click on the green button *"Clone or download"* and then click on *"Download ZIP"*. Now you have all the necessary workshop materials on your computer.
