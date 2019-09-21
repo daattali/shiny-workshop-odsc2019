@@ -3,32 +3,34 @@ library(dplyr)
 library(ggplot2)
 library(colourpicker)
 library(DT)
+library(readr)
 
-players <- read.csv("data/fifa2019.csv", stringsAsFactors = FALSE)
+players <- read_csv("data/nba2018.csv", col_types = cols())
 
 ui <- fluidPage(
-  titlePanel("FIFA 2019 Player Stats"),
-  checkboxInput("full_version", strong("SHOW FULL VERSION")),
+  titlePanel("NBA 2018/19 Player Stats"),
+  checkboxInput("full_version", strong("SHOW FULL VERSION"), value = TRUE),
   sidebarLayout(
     sidebarPanel(
-      "Exploring all player stats from the FIFA 2019 video game",
+      "Exploring all player stats from the NBA 2018/19 season",
       h3("Filters"),
       sliderInput(
-        inputId = "rating",
-        label = "Player rating at least",
-        min = 0, max = 100,
-        value = c(80, 100)
+        inputId = "VORP",
+        label = "Player VORP rating at least",
+        min = -3, max = 10,
+        value = c(0, 10)
       ),
       selectInput(
-        "country", "Player nationality",
-        unique(players$nationality),
-        selected = "Brazil",
+        "Team", "Team",
+        unique(players$Team),
         multiple = TRUE
       ),
       conditionalPanel(
         "input.full_version",
         h3("Plot options"),
-        selectInput("variable", "Variable", c("rating", "wage", "value", "age"), "value"),
+        selectInput("variable", "Variable",
+                    c("VORP", "Salary", "Age", "Height", "Weight"),
+                    "Salary"),
         radioButtons("plot_type", "Plot type", c("histogram", "density")),
         checkboxInput("log", "Log scale", value = TRUE),
         numericInput("size", "Font size", 16),
@@ -41,7 +43,7 @@ ui <- fluidPage(
         textOutput("num_players", inline = TRUE),
         "players in the dataset"
       ),
-      plotOutput("fifa_plot"),
+      plotOutput("nba_plot"),
       DTOutput("players_data")
     )
   )
@@ -51,34 +53,26 @@ server <- function(input, output, session) {
 
   filtered_data <- reactive({
     players <- players %>%
-      filter(rating >= input$rating[1],
-             rating <= input$rating[2])
+      filter(VORP >= input$VORP[1],
+             VORP <= input$VORP[2])
 
-    if (length(input$country) > 0) {
+    if (length(input$Team) > 0) {
       players <- players %>%
-        filter(nationality %in% input$country)
+        filter(Team %in% input$Team)
     }
 
     players
   })
 
   output$players_data <- renderDT({
-    if (input$full_version) {
-      # Turn the photo URLs into HTML image tags
-      filtered_data() %>%
-        mutate(
-          photo = paste0("<img src='", photo, "' />")
-        )
-    } else {
-      filtered_data()
-    }
-  }, escape = FALSE)
+    filtered_data()
+  })
 
   output$num_players <- renderText({
     nrow(filtered_data())
   })
 
-  output$fifa_plot <- renderPlot({
+  output$nba_plot <- renderPlot({
     if (input$full_version) {
       p <- ggplot(filtered_data(), aes_string(input$variable)) +
         theme_classic(input$size)
@@ -95,7 +89,7 @@ server <- function(input, output, session) {
         p <- p + scale_x_continuous(labels = scales::comma)
       }
     } else {
-      p <- ggplot(filtered_data(), aes(value)) +
+      p <- ggplot(filtered_data(), aes(Salary)) +
         geom_histogram() +
         theme_classic() +
         scale_x_log10(labels = scales::comma)

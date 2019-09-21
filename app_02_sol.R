@@ -1,12 +1,12 @@
 library(shiny)
 
-players <- read.csv("data/fifa2019.csv", stringsAsFactors = FALSE)
+players <- read.csv("data/nba2018.csv")
 
 ui <- fluidPage(
-  titlePanel("FIFA 2019 Player Stats"),
+  titlePanel("NBA 2018/19 Player Stats"),
   sidebarLayout(
     sidebarPanel(
-      "Exploring all player stats from the FIFA 2019 video game"
+      "Exploring all player stats from the NBA 2018/19 season"
     ),
     mainPanel(
       strong(

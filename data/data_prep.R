@@ -1,48 +1,17 @@
-library(dplyr)
-
 # Source: https://www.kaggle.com/schmadam97/nba-regular-season-stats-20182019
-players <- read.csv("data/fifa2019_raw.csv", stringsAsFactors = FALSE)
+players <- readr::read_csv("data/nba2018_raw.csv", col_types = readr::cols(), na = "NA")
 
-# Make sure all Wage and Value currencies are in Euros
-wage_currency <- unique(substring(players$Wage, 1, 1))
-stopifnot(length(wage_currency) == 1)
-stopifnot(wage_currency == "€")
-value_currency <- unique(substring(players$Value, 1, 1))
-stopifnot(length(value_currency) == 1)
-stopifnot(value_currency == "€")
+# Sanity check: all players without a team have no salary
+if (!all((players$Team == "") == (players$Salary == "-"))) {
+  stop("There is a teamless player with a salary, or a salaryless player with a team")
+}
 
-# Make sure all wages are in thousands (or 0) and values are in thousands or millions
-wage_unit <- unique(substring(players$Wage, nchar(players$Wage)))
-stopifnot(length(wage_unit) == 2)
-stopifnot(all(wage_unit %in% c("0", "K")))
-value_unit <- unique(substring(players$Value, nchar(players$Value)))
-stopifnot(length(value_unit) == 3)
-stopifnot(all(value_unit %in% c("0", "K", "M")))
+# Players without a team are Free Agents (clearer than just having an empty string)
+players$Team[players$Team == ""] <- "<Free Agent>"
 
-# Convert all wages and values to absolute numbers
-players <- players %>% mutate(
-  Value_unit = substring(Value, nchar(Value)),
-  Value = substring(Value, 2, nchar(Value) - 1) %>% as.numeric(),
-  Value = case_when(
-    Value_unit == "0" ~ 0,
-    Value_unit == "K" ~ Value * 1000,
-    Value_unit == "M" ~ Value * 1000000
-  ),
+# Convert salary to numeric and change "-" salary to 0
+players$Salary[players$Salary == "-"] <- 0
+players$Salary <- as.numeric(players$Salary)
 
-  Wage_unit = substring(Wage, nchar(Wage)),
-  Wage = substring(Wage, 2, nchar(Wage) - 1) %>% as.numeric(),
-  Wage = case_when(
-    Wage_unit == "0" ~ 0,
-    Wage_unit == "K" ~ Wage * 1000,
-    Wage_unit == "M" ~ Wage * 1000000
-  )
-)
-
-# Replace special vowels (accented and such) with regular, to avoid encoding issues
-players$Name <- iconv(players$Name, to = 'ASCII//TRANSLIT')
-
-# Rename columns, keep only a few columns and save
-players <- players %>% select(id = ID, name = Name, age = Age,
-                              rating = Overall, value = Value, wage = Wage,
-                              nationality = Nationality, photo = Photo)
-write.csv(players, "data/fifa2019.csv", row.names = FALSE)
+# Save the clean data
+write.csv(players, "data/nba2018.csv", row.names = FALSE)

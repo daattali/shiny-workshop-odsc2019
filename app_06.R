@@ -3,24 +3,24 @@ library(ggplot2)
 library(dplyr)
 library(DT)
 
-players <- read.csv("data/fifa2019.csv", stringsAsFactors = FALSE)
+players <- read.csv("data/nba2018.csv")
 
 ui <- fluidPage(
-  titlePanel("FIFA 2019 Player Stats"),
+  titlePanel("NBA 2018/19 Player Stats"),
   sidebarLayout(
     sidebarPanel(
-      "Exploring all player stats from the FIFA 2019 video game",
+      "Exploring all player stats from the NBA 2018/19 season",
       h3("Filters"),
       sliderInput(
-        inputId = "rating",
-        label = "Player rating at least",
-        min = 0, max = 100,
-        value = 80
+        inputId = "VORP",
+        label = "Player VORP rating at least",
+        min = -3, max = 10,
+        value = 0
       ),
       selectInput(
-        "country", "Player nationality",
-        unique(players$nationality),
-        selected = "Brazil"
+        "Team", "Team",
+        unique(players$Team),
+        selected = "Golden State Warriors"
       )
     ),
     mainPanel(
@@ -29,7 +29,7 @@ ui <- fluidPage(
         textOutput("num_players", inline = TRUE),
         "players in the dataset"
       ),
-      plotOutput("fifa_plot"),
+      plotOutput("nba_plot"),
       DTOutput("players_data")
     )
   )
@@ -39,26 +39,26 @@ server <- function(input, output, session) {
 
   output$players_data <- renderDT({
     data <- players %>%
-      filter(rating >= input$rating,
-             nationality %in% input$country)
+      filter(VORP >= input$VORP,
+             Team %in% input$Team)
 
     data
   })
 
   output$num_players <- renderText({
     data <- players %>%
-      filter(rating >= input$rating,
-             nationality %in% input$country)
+      filter(VORP >= input$VORP,
+             Team %in% input$Team)
 
     nrow(data)
   })
 
-  output$fifa_plot <- renderPlot({
+  output$nba_plot <- renderPlot({
     data <- players %>%
-      filter(rating >= input$rating,
-             nationality %in% input$country)
+      filter(VORP >= input$VORP,
+             Team %in% input$Team)
 
-    ggplot(data, aes(value)) +
+    ggplot(data, aes(Salary)) +
       geom_histogram()
   })
 

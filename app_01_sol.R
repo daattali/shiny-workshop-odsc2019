@@ -1,6 +1,6 @@
 library(shiny)
 
-players <- read.csv("data/fifa2019.csv", stringsAsFactors = FALSE)
+players <- read.csv("data/nba2018.csv")
 
 print(nrow(players))
 

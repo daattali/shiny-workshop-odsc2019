@@ -4,28 +4,30 @@ library(dplyr)
 library(DT)
 library(colourpicker)
 
-players <- read.csv("data/fifa2019.csv", stringsAsFactors = FALSE)
+players <- read.csv("data/nba2018.csv")
 
 ui <- fluidPage(
-  titlePanel("FIFA 2019 Player Stats"),
+  titlePanel("NBA 2018/19 Player Stats"),
   sidebarLayout(
     sidebarPanel(
-      "Exploring all player stats from the FIFA 2019 video game",
+      "Exploring all player stats from the NBA 2018/19 season",
       h3("Filters"),
       sliderInput(
-        inputId = "rating",
-        label = "Player rating at least",
-        min = 0, max = 100,
-        value = c(80, 100)
+        inputId = "VORP",
+        label = "Player VORP rating at least",
+        min = -3, max = 10,
+        value = c(0, 10)
       ),
       selectInput(
-        "country", "Player nationality",
-        unique(players$nationality),
-        selected = "Brazil",
+        "Team", "Team",
+        unique(players$Team),
+        selected = "Golden State Warriors",
         multiple = TRUE
       ),
       h3("Plot options"),
-      selectInput("variable", "Variable", c("rating", "wage", "value", "age"), "value"),
+      selectInput("variable", "Variable",
+                  c("VORP", "Salary", "Age", "Height", "Weight"),
+                  "Salary"),
       radioButtons("plot_type", "Plot type", c("histogram", "density"))
     ),
     mainPanel(
@@ -34,7 +36,7 @@ ui <- fluidPage(
         textOutput("num_players", inline = TRUE),
         "players in the dataset"
       ),
-      plotOutput("fifa_plot"),
+      plotOutput("nba_plot"),
       DTOutput("players_data")
     )
   )
@@ -44,12 +46,12 @@ server <- function(input, output, session) {
 
   filtered_data <- reactive({
     players <- players %>%
-      filter(rating >= input$rating[1],
-             rating <= input$rating[2])
+      filter(VORP >= input$VORP[1],
+             VORP <= input$VORP[2])
 
-    if (length(input$country) > 0) {
+    if (length(input$Team) > 0) {
       players <- players %>%
-        filter(nationality %in% input$country)
+        filter(Team %in% input$Team)
     }
 
     players
@@ -63,7 +65,7 @@ server <- function(input, output, session) {
     nrow(filtered_data())
   })
 
-  output$fifa_plot <- renderPlot({
+  output$nba_plot <- renderPlot({
     p <- ggplot(filtered_data(), aes_string(input$variable)) +
       theme_classic() +
       scale_x_log10(labels = scales::comma)
