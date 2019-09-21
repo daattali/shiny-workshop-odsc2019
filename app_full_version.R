@@ -65,7 +65,7 @@ server <- function(input, output, session) {
   })
 
   output$players_data <- renderDT({
-    filtered_data()
+    datatable(filtered_data()) %>% formatCurrency('Salary')
   })
 
   output$num_players <- renderText({
