@@ -4,7 +4,7 @@ In this workshop, we'll be using [data](https://www.kaggle.com/schmadam97/nba-re
 
 Slides are available [here](https://github.com/daattali/shiny-workshop-odsc2019/raw/master/Shiny%20Workshop%20-%20ODSC%202019.pdf)
 
-### Before we begin: Option 1
+## Before we begin
 
 **Step 1:** Go to https://rstudio.cloud and sign up
 
