@@ -2,8 +2,6 @@ library(shiny)
 
 players <- read.csv("data/nba2018.csv")
 
-print(nrow(players))
-
 ui <- fluidPage(
   nrow(players)
 )
